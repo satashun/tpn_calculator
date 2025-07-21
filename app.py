@@ -75,6 +75,16 @@ COMPOSITIONS = {
         "P": 0,
         "Ca": 0.39,
     },  # 8.5% グルコン酸Ca
+    "蒸留水": {
+        "glucose": 0,
+        "Na": 0,
+        "K": 0,
+        "Cl": 0,
+        "amino_acid": 0,
+        "N": 0,
+        "P": 0,
+        "Ca": 0,
+    },
     "ヘパリン": {
         "glucose": 0,
         "Na": 0,
@@ -167,6 +177,9 @@ with st.sidebar:
         step=0.1,
         format="%.1f",
     )
+    dw_vol = st.number_input(
+        "蒸留水 (mL)", min_value=0.0, max_value=50.0, value=0.0, step=0.5, format="%.1f"
+    )
     heparin_vol = st.number_input(
         "ヘパリン (mL)",
         min_value=0.0,
@@ -229,6 +242,7 @@ if calc_button:
             "プレアミンP": preamin_vol,
             "リン酸Na": na_p_vol,
             "カルチコール": calticol_vol,
+            "蒸留水": dw_vol,
         }
 
         for name, vol in volumes.items():
