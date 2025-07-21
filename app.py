@@ -47,24 +47,24 @@ COMPOSITIONS = {
     },
     "プレアミンP": {
         "glucose": 0,
-        "Na": 0.02,
+        "Na": 0.003,
         "K": 0,
-        "Cl": 0.02,
-        "amino_acid": 0.03,
-        "N": 0.0047,
+        "Cl": 0,
+        "amino_acid": 0.076,
+        "N": 0.01175,
         "P": 0,
         "Ca": 0,
     },
     "リン酸Na": {
         "glucose": 0,
-        "Na": 1.0,
+        "Na": 0.75,
         "K": 0,
         "Cl": 0,
         "amino_acid": 0,
         "N": 0,
-        "P": 1.0,
+        "P": 0.5,
         "Ca": 0,
-    },  # 1mEq/mL Na, 1mmol/mL P
+    },  # Na 0.75 mEq/mL, P 0.5 mmol/mL
     "カルチコール": {
         "glucose": 0,
         "Na": 0,
@@ -73,7 +73,7 @@ COMPOSITIONS = {
         "amino_acid": 0,
         "N": 0,
         "P": 0,
-        "Ca": 0.425,
+        "Ca": 0.39,
     },  # 8.5% グルコン酸Ca
     "ヘパリン": {
         "glucose": 0,
