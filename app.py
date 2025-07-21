@@ -98,7 +98,7 @@ with st.sidebar:
 
     # 体重と流速
     weight_g = st.number_input(
-        "体重 (g)", min_value=100, max_value=10000, value=1500, step=50
+        "体重 (g)", min_value=100, max_value=10000, value=1500, step=1
     )
     flow_rate = st.number_input(
         "流速 (mL/hr)",
@@ -116,7 +116,7 @@ with st.sidebar:
         min_value=0.0,
         max_value=50.0,
         value=10.0,
-        step=0.5,
+        step=0.1,
         format="%.1f",
     )
     saline_vol = st.number_input(
@@ -124,7 +124,7 @@ with st.sidebar:
         min_value=0.0,
         max_value=50.0,
         value=0.0,
-        step=0.5,
+        step=0.1,
         format="%.1f",
     )
     d20_vol = st.number_input(
@@ -132,7 +132,7 @@ with st.sidebar:
         min_value=0.0,
         max_value=50.0,
         value=25.0,
-        step=0.5,
+        step=0.1,
         format="%.1f",
     )
     d50_vol = st.number_input(
@@ -140,7 +140,7 @@ with st.sidebar:
         min_value=0.0,
         max_value=50.0,
         value=0.0,
-        step=0.5,
+        step=0.1,
         format="%.1f",
     )
     preamin_vol = st.number_input(
@@ -148,7 +148,7 @@ with st.sidebar:
         min_value=0.0,
         max_value=50.0,
         value=13.0,
-        step=0.5,
+        step=0.1,
         format="%.1f",
     )
     na_p_vol = st.number_input(
@@ -171,8 +171,8 @@ with st.sidebar:
         "ヘパリン (mL)",
         min_value=0.0,
         max_value=5.0,
-        value=0.5,
-        step=0.1,
+        value=0.05,
+        step=0.01,
         format="%.1f",
     )
 
