@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 
 # --- 定数と製剤データの定義 ---
 # 各製剤1mLあたりの含有量
@@ -375,6 +376,37 @@ if calc_button:
         )
         contents_df["濃度"] = contents_df["濃度"].map("{:.1f}".format)
         st.table(contents_df.set_index("成分"))
+
+        # --- Mx を計算 (x=0,1,...) ---
+        st.markdown("---")
+        st.header("🍼 経口摂取に合わせた流速調整")
+        st.write(
+            f"現在の1日の目標総水分量を **{total_infusion_day:.1f} mL/day** として，ミルク摂取量に応じたIV流速を計算します．"
+        )
+
+        # ミルク量を段階的に増やしてリストを作成
+        max_milk_per_feed = (
+            int(np.ceil(total_infusion_day / 8)) + 5
+        )  # IVが0になる量+αまで表示
+        milk_volumes = list(range(0, max_milk_per_feed + 1, 1))  # 1mL刻み
+
+        flow_adjustment_data = []
+        for x in milk_volumes:
+            daily_milk_intake = x * 8
+            required_iv_volume = total_infusion_day - daily_milk_intake
+            # 新しい流速が負にならないようにする
+            new_flow_rate = max(0, required_iv_volume / 24)
+            flow_adjustment_data.append(
+                {
+                    "ミルク量/回 (mL)": x,
+                    "ミルク量/日 (mL)": daily_milk_intake,
+                    "調整後のIV流速 (mL/hr)": f"{new_flow_rate:.2f}",
+                }
+            )
+
+        flow_df = pd.DataFrame(flow_adjustment_data)
+        st.table(flow_df)
+        # --- 追加機能ここまで ---
 
 else:
     st.info("サイドバーで各値を入力し、「計算実行」ボタンを押してください。")
