@@ -55,6 +55,26 @@ COMPOSITIONS = {
         "P": 0,
         "Ca": 0,
     },
+    "KCl": {
+        "glucose": 0,
+        "Na": 0,
+        "K": 1.0,
+        "Cl": 1.0,
+        "amino_acid": 0,
+        "N": 0,
+        "P": 0,
+        "Ca": 0,
+    },
+    "10%NaCl": {
+        "glucose": 0,
+        "Na": 1.711,
+        "K": 0,
+        "Cl": 1.711,
+        "amino_acid": 0,
+        "N": 0,
+        "P": 0,
+        "Ca": 0,
+    },  # 10% NaCl
     "リン酸Na": {
         "glucose": 0,
         "Na": 0.75,
@@ -161,6 +181,17 @@ with st.sidebar:
         step=0.1,
         format="%.1f",
     )
+    kcl_vol = st.number_input(
+        "KCl (mL)", min_value=0.0, max_value=50.0, value=0.0, step=0.1, format="%.1f"
+    )
+    nacl_vol = st.number_input(
+        "10% NaCl (mL)",
+        min_value=0.0,
+        max_value=50.0,
+        value=0.0,
+        step=0.1,
+        format="%.1f",
+    )
     na_p_vol = st.number_input(
         "リン酸Na (mL)",
         min_value=0.0,
@@ -242,6 +273,8 @@ if calc_button:
             "プレアミンP": preamin_vol,
             "リン酸Na": na_p_vol,
             "カルチコール": calticol_vol,
+            "NaCl": nacl_vol,
+            "KCl": kcl_vol,
             "蒸留水": dw_vol,
         }
 
@@ -314,32 +347,36 @@ if calc_button:
             st.table(result_df.set_index("成分"))
 
         st.markdown("---")
-        st.subheader("📝 参考: 混合液50mL中の総量")
+        st.subheader("📝 参考: 混合液の濃度 (/Lあたり)")
+
+        # 50mLあたりの総量を20倍して1Lあたりの濃度に換算
+        contents_per_liter = {key: value * 20 for key, value in total_contents.items()}
+
         contents_df = pd.DataFrame(
             {
                 "成分": [
-                    "ブドウ糖 (g)",
-                    "アミノ酸 (g)",
-                    "Na (mEq)",
-                    "K (mEq)",
-                    "Cl (mEq)",
-                    "P (mmol)",
-                    "Ca (mEq)",
-                    "窒素 (g)",
+                    "ブドウ糖 (g/L)",
+                    "アミノ酸 (g/L)",
+                    "Na (mEq/L)",
+                    "K (mEq/L)",
+                    "Cl (mEq/L)",
+                    "P (mmol/L)",
+                    "Ca (mEq/L)",
+                    "窒素 (g/L)",
                 ],
-                "総量": [
-                    total_contents["glucose"],
-                    total_contents["amino_acid"],
-                    total_contents["Na"],
-                    total_contents["K"],
-                    total_contents["Cl"],
-                    total_contents["P"],
-                    total_contents["Ca"],
-                    total_contents["N"],
+                "濃度": [
+                    contents_per_liter["glucose"],
+                    contents_per_liter["amino_acid"],
+                    contents_per_liter["Na"],
+                    contents_per_liter["K"],
+                    contents_per_liter["Cl"],
+                    contents_per_liter["P"],
+                    contents_per_liter["Ca"],
+                    contents_per_liter["N"],
                 ],
             }
         )
-        contents_df["総量"] = contents_df["総量"].map("{:.2f}".format)
+        contents_df["濃度"] = contents_df["濃度"].map("{:.1f}".format)
         st.table(contents_df.set_index("成分"))
 
 else:
