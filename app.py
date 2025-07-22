@@ -6,7 +6,7 @@ import pandas as pd
 # 単位: g (ブドウ糖, アミノ酸, 窒素), mEq (電解質), mmol (リン)
 COMPOSITIONS = {
     "ソルデム3AG": {
-        "glucose": 0.043,
+        "glucose": 0.075,
         "Na": 0.035,
         "K": 0.020,
         "Cl": 0.035,
@@ -108,13 +108,13 @@ with st.sidebar:
 
     # 体重と流速
     weight_g = st.number_input(
-        "体重 (g)", min_value=100, max_value=10000, value=1500, step=1
+        "体重 (g)", min_value=100, max_value=10000, value=1000, step=1
     )
     flow_rate = st.number_input(
         "流速 (mL/hr)",
-        min_value=0.1,
+        min_value=0,
         max_value=10.0,
-        value=2.1,
+        value=0,
         step=0.1,
         format="%.1f",
     )
@@ -125,7 +125,7 @@ with st.sidebar:
         "ソルデム3AG (mL)",
         min_value=0.0,
         max_value=50.0,
-        value=10.0,
+        value=0.0,
         step=0.1,
         format="%.1f",
     )
@@ -141,7 +141,7 @@ with st.sidebar:
         "20%糖液 (mL)",
         min_value=0.0,
         max_value=50.0,
-        value=25.0,
+        value=0.0,
         step=0.1,
         format="%.1f",
     )
@@ -157,7 +157,7 @@ with st.sidebar:
         "プレアミンP (mL)",
         min_value=0.0,
         max_value=50.0,
-        value=13.0,
+        value=0.0,
         step=0.1,
         format="%.1f",
     )
@@ -165,7 +165,7 @@ with st.sidebar:
         "リン酸Na (mL)",
         min_value=0.0,
         max_value=50.0,
-        value=2.0,
+        value=0.0,
         step=0.1,
         format="%.1f",
     )
