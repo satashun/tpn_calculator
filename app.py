@@ -386,7 +386,7 @@ if calc_button:
 
         # ミルク量を段階的に増やしてリストを作成
         max_milk_per_feed = (
-            int(np.ceil(total_infusion_day / 8)) + 5
+            int(np.ceil(total_infusion_day / 8)) + 1
         )  # IVが0になる量+αまで表示
         milk_volumes = list(range(0, max_milk_per_feed + 1, 1))  # 1mL刻み
 
@@ -399,7 +399,6 @@ if calc_button:
             flow_adjustment_data.append(
                 {
                     "ミルク量/回 (mL)": x,
-                    "ミルク量/日 (mL)": daily_milk_intake,
                     "調整後のIV流速 (mL/hr)": f"{new_flow_rate:.2f}",
                 }
             )
