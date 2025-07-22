@@ -381,7 +381,7 @@ if calc_button:
         st.markdown("---")
         st.header("🍼 経口摂取に合わせた流速調整")
         st.write(
-            f"現在の1日の目標総水分量を **{total_infusion_day:.1f} mL/day** として，ミルク摂取量に応じたIV流速を計算します．"
+            f"現在の1日の目標総水分量を **{total_infusion_day:.1f} mL/day** として，哺乳量 (1日8回摂取とします) に応じたIV流速を計算します．"
         )
 
         # ミルク量を段階的に増やしてリストを作成
@@ -404,6 +404,7 @@ if calc_button:
             )
 
         flow_df = pd.DataFrame(flow_adjustment_data)
+        flow_df.set_index("ミルク量/回 (mL)")
         st.table(flow_df)
         # --- 追加機能ここまで ---
 
