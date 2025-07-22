@@ -232,15 +232,24 @@ if calc_button:
         error_messages.append(f"体重が500g~5000gの範囲外です。(現在: {weight_g}g)")
 
     # 2. 輸液合計量チェック (ヘパリン除く)
-    total_volume_except_heparin = (
-        s3ag_vol
-        + saline_vol
-        + d20_vol
-        + d50_vol
-        + preamin_vol
-        + na_p_vol
-        + calticol_vol
-    )
+    volumes = {
+        "ソルデム3AG": s3ag_vol,
+        "生理食塩水": saline_vol,
+        "20%糖液": d20_vol,
+        "50%糖液": d50_vol,
+        "プレアミンP": preamin_vol,
+        "リン酸Na": na_p_vol,
+        "カルチコール": calticol_vol,
+        "10%NaCl": nacl_vol,
+        "KCl": kcl_vol,
+        "蒸留水": dw_vol,
+    }
+
+    total_volume_except_heparin = 0.0
+
+    for name, vol in volumes.items():
+        total_volume_except_heparin += vol
+
     if not (abs(total_volume_except_heparin - 50.0) < 1e-9):  # 浮動小数点数の誤差を考慮
         error_messages.append(
             f"ヘパリン以外の合計輸液量が50mLになっていません。(現在: {total_volume_except_heparin:.1f}mL)"
@@ -265,18 +274,6 @@ if calc_button:
 
         # 混合液50mL中の各成分の総量を計算
         total_contents = {key: 0.0 for key in COMPOSITIONS["ソルデム3AG"]}
-        volumes = {
-            "ソルデム3AG": s3ag_vol,
-            "生理食塩水": saline_vol,
-            "20%糖液": d20_vol,
-            "50%糖液": d50_vol,
-            "プレアミンP": preamin_vol,
-            "リン酸Na": na_p_vol,
-            "カルチコール": calticol_vol,
-            "10%NaCl": nacl_vol,
-            "KCl": kcl_vol,
-            "蒸留水": dw_vol,
-        }
 
         for name, vol in volumes.items():
             if vol > 0:
