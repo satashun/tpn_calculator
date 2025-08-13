@@ -26,6 +26,16 @@ COMPOSITIONS = {
         "P": 0,
         "Ca": 0,
     },
+    "10%糖液": {
+        "glucose": 0.100,
+        "Na": 0,
+        "K": 0,
+        "Cl": 0,
+        "amino_acid": 0,
+        "N": 0,
+        "P": 0,
+        "Ca": 0,
+    },
     "20%糖液": {
         "glucose": 0.200,
         "Na": 0,
@@ -121,24 +131,42 @@ COMPOSITIONS = {
 # --- Streamlit UI の構築 ---
 st.set_page_config(layout="wide")
 st.title("新生児TPN計算ツール 👶")
-st.write("点滴の組成、体重、流速を入力して、1日・体重あたりの投与量を計算します。")
+st.write("点滴の組成，体重，流速を入力して，1日・体重あたりの投与量を計算します．")
 
 # --- 入力セクション (サイドバー) ---
 with st.sidebar:
     st.header("💉 投与内容の入力")
 
+    calc_mode = st.toggle("TWI を指定して計算する", False)
+
     # 体重と流速
     weight_g = st.number_input(
-        "体重 (g)", min_value=100, max_value=10000, value=1000, step=1
+        "体重 (g)", min_value=100, max_value=10000, value=0, step=1
     )
-    flow_rate = st.number_input(
-        "流速 (mL/hr)",
-        min_value=0.1,
-        max_value=10.0,
-        value=1.0,
-        step=0.1,
-        format="%.1f",
-    )
+
+    if calc_mode:
+        twi = st.number_input(
+            "TWI (mL/kg/day)",
+            min_value=5.0,
+            max_value=300.0,
+            value=0.0,
+            step=5.0,
+            format="%.1f",
+        )
+        # --- 流速を計算し、小数点以下1桁に丸める ---
+        raw_flow_rate = (weight_g / 1000.0) * twi / 24 if weight_g > 0 else 0
+        flow_rate = round(raw_flow_rate, 1)
+        st.info(f"計算上の流速: {flow_rate:.1f} mL/hr")
+    else:
+        flow_rate = st.number_input(
+            "流速 (mL/hr)",
+            min_value=0.1,
+            max_value=999.0,
+            value=0.0,
+            step=0.1,
+            format="%.1f",
+        )
+        twi = (flow_rate * 24) / (weight_g / 1000.0) if weight_g > 0 else 0
 
     st.subheader("輸液組成 (合計50mL)")
     # 輸液量の入力
@@ -152,6 +180,14 @@ with st.sidebar:
     )
     saline_vol = st.number_input(
         "生理食塩水 (mL)",
+        min_value=0.0,
+        max_value=50.0,
+        value=0.0,
+        step=0.1,
+        format="%.1f",
+    )
+    d10_vol = st.number_input(
+        "10%糖液 (mL)",
         min_value=0.0,
         max_value=50.0,
         value=0.0,
@@ -230,12 +266,13 @@ if calc_button:
     error_messages = []
     # 1. 体重チェック
     if not (500 <= weight_g <= 5000):
-        error_messages.append(f"体重が500g~5000gの範囲外です。(現在: {weight_g}g)")
+        error_messages.append(f"体重が500g~5000gの範囲外です．(現在: {weight_g}g)")
 
     # 2. 輸液合計量チェック (ヘパリン除く)
     volumes = {
         "ソルデム3AG": s3ag_vol,
         "生理食塩水": saline_vol,
+        "10%糖液": d10_vol,
         "20%糖液": d20_vol,
         "50%糖液": d50_vol,
         "プレアミンP": preamin_vol,
@@ -253,13 +290,13 @@ if calc_button:
 
     if not (abs(total_volume_except_heparin - 50.0) < 1e-9):  # 浮動小数点数の誤差を考慮
         error_messages.append(
-            f"ヘパリン以外の合計輸液量が50mLになっていません。(現在: {total_volume_except_heparin:.1f}mL)"
+            f"ヘパリン以外の合計輸液量が50mLになっていません．(現在: {total_volume_except_heparin:.1f}mL)"
         )
 
     # 3. リンとカルシウムの同時投与チェック
     if na_p_vol > 0 and calticol_vol > 0:
         error_messages.append(
-            "リン酸Naとカルチコールは同時に投与できません。どちらかを0にしてください。"
+            "リン酸Naとカルチコールは同時に投与できません．どちらかを0にしてください．"
         )
 
     # エラーがあれば表示して終了
@@ -267,7 +304,7 @@ if calc_button:
         for msg in error_messages:
             st.error(f"❌ {msg}")
     else:
-        st.success("✅ 入力チェックをクリアしました。計算結果を表示します。")
+        st.success("✅ 入力チェックをクリアしました．計算結果を表示します．")
 
         # --- 計算ロジック ---
         weight_kg = weight_g / 1000.0
