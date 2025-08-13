@@ -141,7 +141,7 @@ with st.sidebar:
 
     # 体重と流速
     weight_g = st.number_input(
-        "体重 (g)", min_value=100, max_value=10000, value=0, step=1
+        "体重 (g)", min_value=0, max_value=10000, value=0, step=1
     )
 
     if calc_mode:
@@ -149,7 +149,7 @@ with st.sidebar:
             "TWI (mL/kg/day)",
             min_value=5.0,
             max_value=300.0,
-            value=0.0,
+            value=100.0,
             step=5.0,
             format="%.1f",
         )
@@ -160,7 +160,7 @@ with st.sidebar:
     else:
         flow_rate = st.number_input(
             "流速 (mL/hr)",
-            min_value=0.1,
+            min_value=0.0,
             max_value=999.0,
             value=0.0,
             step=0.1,
